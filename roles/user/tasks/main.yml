@@ -1,0 +1,11 @@
+---
+
+- name: Add user group "{{ user.group }}"
+  group: name={{ user.group }}
+  sudo: yes
+  tags: user
+
+- name: Add user "{{ user.username }}"
+  user: name={{ user.username }} groups="sudo" group={{ user.group }}
+  sudo: yes
+  tags: tomcat

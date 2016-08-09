@@ -1,0 +1,27 @@
+---
+
+- name: Install necessary repository
+  apt: >
+    name=python-software-properties
+    state=latest
+  sudo: yes
+  tags: libreoffice
+
+- name: Add repository
+  apt_repository: >
+    repo="{{ libreoffice.apt_repository }}-{{ libreoffice.version }}"
+    state=present
+    update_cache=yes
+  sudo: yes
+  tags: libreoffice
+
+- name: Install LibreOffice {{ libreoffice.version }}
+  apt: >
+      name={{ item }}
+      state=latest
+  with_items:
+      - libreoffice-writer
+      - libreoffice-draw
+      - libreoffice-calc
+  sudo: yes
+  tags: libreoffice

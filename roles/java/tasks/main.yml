@@ -1,0 +1,33 @@
+---
+
+- name: Install Java repository
+  apt: >
+    name=software-properties-common
+    state=latest
+  sudo: yes
+  tags: java
+
+- name: Add Java Repository
+  apt_repository: >
+    repo='{{ java.apt_repository }}'
+  sudo: yes
+  tags: java
+
+- name: Accept {{ java.version }} License
+  debconf: >
+    name='oracle-{{ java.version }}-installer'
+    question='shared/accepted-oracle-license-v1-1'
+    value='true'
+    vtype='select'
+  sudo: yes
+  tags: java
+
+- name: Install Oracle {{ java.version }}
+  apt: >
+    name={{ item }}
+    state=latest
+  sudo: yes
+  with_items:
+    - oracle-{{ java.version }}-installer
+    - ca-certificates
+    - oracle-{{ java.version }}-set-default

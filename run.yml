@@ -1,0 +1,23 @@
+---
+
+- name: Setup basic stack for development
+  hosts: all
+  remote_user: root
+  become:      yes
+
+  roles:
+
+    - role: user
+      user:
+        username: developer
+        group:    developer
+
+    - role: java
+      java:
+        version: java8
+        apt_repository: ppa:webupd8team/java
+
+    - role: libreoffice
+      libreoffice:
+        version: 5-2
+        apt_repository: ppa:libreoffice/libreoffice
