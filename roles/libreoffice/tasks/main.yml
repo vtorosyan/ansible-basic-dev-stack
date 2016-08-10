@@ -4,7 +4,8 @@
   apt: >
     name=python-software-properties
     state=latest
-  sudo: yes
+  become: true
+  become_method: sudo
   tags: libreoffice
 
 - name: Add repository
@@ -12,7 +13,8 @@
     repo="{{ libreoffice.apt_repository }}-{{ libreoffice.version }}"
     state=present
     update_cache=yes
-  sudo: yes
+  become: true
+  become_method: sudo
   tags: libreoffice
 
 - name: Install LibreOffice {{ libreoffice.version }}
@@ -23,5 +25,6 @@
       - libreoffice-writer
       - libreoffice-draw
       - libreoffice-calc
-  sudo: yes
+  become: true
+  become_method: sudo
   tags: libreoffice

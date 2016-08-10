@@ -1,0 +1,85 @@
+---
+
+- name: Adding group "tomcat"
+  group: name=tomcat
+  tags: tomcat
+
+- name: Adding user "tomcat"
+  become: true
+  become_method: sudo
+  user: >
+    name=tomcat
+    group=tomcat
+    home=/usr/share/tomcat
+    createhome=no
+  tags: tomcat
+
+- name: Downloading Tomcat
+  get_url: >
+    url=http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.61/bin/apache-tomcat-7.0.61.tar.gz
+    dest=/opt/apache-tomcat-7.0.61.tar.gz
+  tags: tomcat
+
+- name: Extracting downloaded Tomcat archive
+  command: >
+    chdir=/usr/share /bin/tar xvf /opt/apache-tomcat-7.0.61.tar.gz -C /opt/
+    creates=/opt/apache-tomcat-7.0.61
+  tags: tomcat
+
+- name: Add Symlink to install directory
+  file: >
+    src=/opt/apache-tomcat-7.0.61
+    path=/usr/share/tomcat
+    state=link
+  tags: tomcat
+
+- name: Changeing ownership of Tomcat installation
+  file: >
+    path=/usr/share/tomcat/
+    owner=tomcat
+    group=tomcat
+    state=directory
+    recurse=yes
+  tags: tomcat
+
+- name: Configureing Tomcat server
+  template: >
+    src=server.xml
+    dest=/usr/share/tomcat/conf/
+  notify: restart tomcat
+  tags: tomcat
+
+- name: Configureing Tomcat users
+  template: >
+    src=tomcat-users.xml
+    dest=/usr/share/tomcat/conf/
+  notify: restart tomcat
+  tags: tomcat
+
+- name: Installing Tomcat init script
+  copy: >
+    src=tomcat-initscript.sh
+    dest=/etc/init.d/tomcat
+    mode=0755
+  tags: tomcat
+
+- name: Starting Tomcat
+  service: name=tomcat state=started enabled=yes
+  ignore_errors: yes
+  tags: tomcat
+
+- name: Deploying iptables rules
+  template: src=iptables-save dest=/etc/sysconfig/iptables
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '6'"
+  notify: restart iptables
+  tags: tomcat
+
+- name: Inserting firewalld rule for tomcat http port
+  firewalld: port=8080/tcp permanent=true state=enabled immediate=yes
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+  tags: tomcat
+
+- name: Inserting firewalld rule for tomcat https port
+  firewalld: port=8443/tcp permanent=true state=enabled immediate=yes
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+  tags: tomcat

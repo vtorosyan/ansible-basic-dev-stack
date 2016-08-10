@@ -4,13 +4,15 @@
   apt: >
     name=software-properties-common
     state=latest
-  sudo: yes
+  become: true
+  become_method: sudo
   tags: java
 
 - name: Add Java Repository
   apt_repository: >
     repo='{{ java.apt_repository }}'
-  sudo: yes
+  become: true
+  become_method: sudo
   tags: java
 
 - name: Accept {{ java.version }} License
@@ -19,14 +21,16 @@
     question='shared/accepted-oracle-license-v1-1'
     value='true'
     vtype='select'
-  sudo: yes
+  become: true
+  become_method: sudo
   tags: java
 
 - name: Install Oracle {{ java.version }}
   apt: >
     name={{ item }}
     state=latest
-  sudo: yes
+  become: true
+  become_method: sudo
   with_items:
     - oracle-{{ java.version }}-installer
     - ca-certificates

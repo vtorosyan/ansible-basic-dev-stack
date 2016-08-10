@@ -1,0 +1,29 @@
+---
+
+- name: Making sure apt cache is up to date
+  become: true
+  become_method: sudo
+  apt: update_cache=yes
+  tags: postgres
+
+- name: Installing postgres packages
+  become: true
+  become_method: sudo
+  apt: name={{item}}
+  with_items:
+    - postgresql
+    - libpq-dev
+    - python-psycopg2
+  tags: postgres
+
+- name: Creating DB
+  become: yes
+  become_user: postgres
+  postgresql_db: name={{ dbname }}
+  ignore_errors: yes
+
+- name: Adding access for user {{ dbuser }} to DB {{ dbname }}
+  become: yes
+  become_user: postgres
+  postgresql_user: db={{ dbname }} name={{ dbuser }} password={{ dbpassword }} priv=ALL
+  ignore_errors: yes

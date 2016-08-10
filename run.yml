@@ -21,3 +21,13 @@
       libreoffice:
         version: 5-2
         apt_repository: ppa:libreoffice/libreoffice
+
+    - role: ruby
+      ruby:
+        version: 2.0
+
+    - role: tomcat
+
+    - role: postgres
+
+
