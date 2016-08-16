@@ -5,8 +5,8 @@
   tags: tomcat
 
 - name: Adding user "tomcat"
-  become: true
-  become_method: sudo
+  become: yes
+  become_user: root
   user: >
     name=tomcat
     group=tomcat

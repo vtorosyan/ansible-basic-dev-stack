@@ -1,14 +1,14 @@
 ---
 
 - name: Making sure apt cache is up to date
-  become: true
-  become_method: sudo
+  become: yes
+  become_user: root
   apt: update_cache=yes
   tags: postgres
 
 - name: Installing postgres packages
-  become: true
-  become_method: sudo
+  become: yes
+  become_user: root
   apt: name={{item}}
   with_items:
     - postgresql

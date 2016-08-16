@@ -1,14 +1,14 @@
 ---
 
 - name: Add Ruby PPA Key
-  become: true
-  become_method: sudo
+  become: yes
+  become_user: root
   apt_key: keyserver=keyserver.ubuntu.com id=80F70E11F0F0D5F10CB20E62F5DA5F09C3173AA6
   tags: ruby
 
 - name: Add Ruby PPA Repo
-  become: true
-  become_method: sudo
+  become: yes
+  become_user: root
   apt_repository:
     repo: deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu wily main
     update_cache: yes
@@ -16,8 +16,8 @@
   tags: ruby
 
 - name: Installing Ruby {{ ruby.version }}
-  become: true
-  become_method: sudo
+  become: yes
+  become_user: root
   apt: >
     pkg={{ item }}
     state=latest
@@ -27,16 +27,16 @@
   tags: ruby
 
 - name: Adding symlink for Ruby {{ ruby.version }} installation
-  become: true
-  become_method: sudo
+  become: yes
+  become_user: root
   file: >
     src=/usr/bin/ruby{{ ruby.version }}
     dest=/usr/local/bin/ruby state=link
   tags: ruby
 
 - name: Adding synlink for Ruby Gems {{ ruby.version }}
-  become: true
-  become_method: sudo
+  become: yes
+  become_user: root
   file: >
     src=/usr/bin/gem{{ ruby.version }}
     dest=/usr/local/bin/gem state=link
