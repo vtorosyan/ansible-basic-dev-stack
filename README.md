@@ -1,6 +1,6 @@
 # ansible-basic-dev-stack
 
-Ansible playbook and Docker image to create basic dev stack. 
+Ansible playbook with Docker image for basic dev stack. 
  
 ### Installs and configures the following software
 * Java8
